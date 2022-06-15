@@ -1,0 +1,155 @@
+<form [formGroup]="userDetailControl" (ngSubmit)="submit()">
+  <mat-card>
+    <mat-card-header style="justify-content: end">
+      <section>
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          (click)="submit()"
+        >
+          valider
+        </button>
+        <button type="reset" mat-raised-button (click)="reset()">reset</button>
+        <button type="button" mat-raised-button (click)="setValue()">
+          set default
+        </button>
+      </section>
+    </mat-card-header>
+    <mat-grid-list cols="2" rowHeight="2:2">
+      <mat-grid-tile>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title> Détails </mat-card-title>
+          </mat-card-header>
+          <mat-divider></mat-divider>
+          <mat-card-content>
+            <p>
+              <mat-form-field appearance="legacy">
+                <mat-label>Nom</mat-label>
+                <input
+                  formControlName="first_name"
+                  matInput
+                  placeholder="Ex. Tareb"
+                  required
+                />
+                <mat-icon matSuffix>first_name</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="legacy">
+                <mat-label>Prénom</mat-label>
+                <input
+                  formControlName="last_name"
+                  matInput
+                  placeholder="Ex. Mohamed"
+                  required
+                />
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input
+                  formControlName="email"
+                  matInput
+                  placeholder="Ex. pat@example.com"
+                  required
+                />
+                <mat-icon matSuffix>email</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>password</mat-label>
+                <input
+                  formControlName="password"
+                  matInput
+                  type="password"
+                  required
+                />
+                <mat-icon matSuffix>password</mat-icon>
+              </mat-form-field>
+            </p>
+
+            <mat-radio-group
+              formControlName="gender"
+              aria-label="Select an option"
+            >
+              <mat-radio-button value="male">Homme </mat-radio-button>
+              <mat-radio-button value="female">Femme</mat-radio-button>
+            </mat-radio-group>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title> Contact </mat-card-title>
+          </mat-card-header>
+          <mat-divider></mat-divider>
+          <mat-card-content>
+            <p>
+              <mat-form-field appearance="fill" class="example-form-field">
+                <mat-label>Date de naissance</mat-label>
+                <input
+                  matInput
+                  formControlName="birth"
+                  [matDatepicker]="datepicker"
+                  placeholder="1/1/1999"
+                />
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="datepicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel>Cancel</button>
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      matDatepickerApply
+                    >
+                      Apply
+                    </button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field appearance="legacy">
+                <mat-label>Phone</mat-label>
+                <input
+                  formControlName="phone"
+                  type="tel"
+                  matInput
+                  placeholder="entrez le numéro de tel"
+                />
+                <mat-icon matSuffix>local_phone</mat-icon>
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field appearance="legacy">
+                <mat-label>address</mat-label>
+                <input
+                  formControlName="address"
+                  matInput
+                  placeholder="Ex. Rue d'alger kolea"
+                />
+                <mat-icon matSuffix>home</mat-icon>
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Textarea</mat-label>
+                <textarea matInput></textarea>
+              </mat-form-field>
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>3</mat-grid-tile>
+      <mat-grid-tile>4</mat-grid-tile>
+    </mat-grid-list>
+    <mat-divider></mat-divider>
+  </mat-card>
+</form>

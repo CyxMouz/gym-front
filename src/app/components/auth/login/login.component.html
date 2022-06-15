@@ -1,0 +1,35 @@
+<form class="example-form" [formGroup]="userAuthControl" (ngSubmit)="submit()">
+  <mat-card class="example-card">
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content>
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input formControlName="email" matInput type="email" required />
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>mot de passe</mat-label>
+        <input formControlName="password" matInput type="password" required />
+        <mat-icon matSuffix>password</mat-icon>
+      </mat-form-field>
+      <mat-error *ngIf="isLoginFailed">
+        {{ messageError }}
+      </mat-error>
+    </mat-card-content>
+    <mat-divider inset></mat-divider>
+    <mat-card-actions>
+      <button mat-stroked-button type="submit" (click)="submit()">
+        connexion
+      </button>
+
+      <br />
+
+      <a [routerLink]="['/register']" routerLinkActive="router-link"
+        >creé un compte</a
+      >
+    </mat-card-actions>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </mat-card-footer>
+  </mat-card>
+</form>

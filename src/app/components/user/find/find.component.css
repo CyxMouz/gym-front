@@ -1,0 +1,32 @@
+mat-form-field {
+    margin-right: 12px;
+  }
+  .grid-container {
+    margin: 20px;
+  }
+  
+  .dashboard-card {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+  }
+  mat-grid-tile {
+    position: absolute;
+  }
+  .searchBar {
+    
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    width: 500px;
+  }
+  .exampleImage {
+    max-width: 400px;
+    max-height: 400px;
+  }
+  .imageContainer {
+    margin: 20px;
+  }

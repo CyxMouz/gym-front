@@ -1,0 +1,305 @@
+<mat-form-field class="searchBar" appearance="fill">
+  <mat-label>Chercher un membre </mat-label>
+  <input
+    matInput
+    type="text"
+    [formControl]="search"
+    [matAutocomplete]="auto"
+    aria-label="Clear"
+    [(ngModel)]="insertSearchBarValue"
+  />
+  <button
+    *ngIf="insertSearchBarValue"
+    matSuffix
+    mat-icon-button
+    aria-label="Clear"
+    (click)="insertSearchBarValue = ''"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-icon matSuffix>search</mat-icon>
+
+  <mat-autocomplete
+    autoActiveFirstOption
+    #auto="matAutocomplete"
+    [displayWith]="displayFn"
+  >
+    <mat-option
+      *ngFor="let option of filteredOptions | async"
+      [value]="option"
+      (click)="getUser(option)"
+    >
+      {{ option.first_name }}
+      {{ option.last_name }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+<mat-tab-group *ngIf="insertSearchBarValue">
+  <mat-tab label="Détails">
+    <form [formGroup]="userDetailControl" (ngSubmit)="submit()">
+      <mat-card-header
+        style="justify-content: end; margin-top: 2px; margin-bottom: 2px"
+      >
+        <section>
+          <button type="submit" mat-raised-button color="primary">
+            <mat-icon>save_alt</mat-icon> Save
+          </button>
+          <button type="reset" mat-raised-button (click)="reset()">
+            <mat-icon>restore</mat-icon>
+            Reset
+          </button>
+
+          <button
+            type="button"
+            mat-raised-button
+            color="warn"
+            (click)="delete()"
+          >
+            <mat-icon>delete</mat-icon> Delete
+          </button>
+        </section>
+      </mat-card-header>
+
+      <mat-grid-list cols="3" rowHeight="450px">
+        <mat-grid-tile [colspan]="1" [rowspan]="2">
+          <mat-card class="dashboard-card">
+            <mat-card-title
+              ><mat-icon matSuffix>account_circle</mat-icon
+              >Profile</mat-card-title
+            >
+            <div class="imageContainer" *ngIf="url">
+              <img mat-card-image class="exampleImage" [src]="url" />
+            </div>
+
+            <form [formGroup]="fileUploadForm">
+              <input
+                type="file"
+                color="primary"
+                id="uploadedImage"
+                name="uploadedImage"
+                (change)="onFileSelect($event)"
+                #UploadFileInput
+                enctype="multipart/form-data"
+              />
+              <button mat-button color="primary">
+                <mat-icon>camera_alt</mat-icon> Prendre une photo
+              </button>
+              <button mat-button color="primary">
+                <mat-icon>attachment</mat-icon> Télécharger une photo
+              </button>
+            </form>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content> </mat-card-content>
+            <mat-card style="margin-top: 4px">
+              <mat-card-title>Account</mat-card-title>
+              <mat-card-subtitle>le membre nous doit 0 DA </mat-card-subtitle>
+            </mat-card>
+            <mat-card style="margin-top: 4px">
+              <mat-card-title>Abonnement</mat-card-title>
+              <mat-card-subtitle> </mat-card-subtitle>
+              <mat-card-subtitle>abonnement mensuel</mat-card-subtitle>
+              <mat-card-subtitle>cout total 1500Da </mat-card-subtitle>
+              <mat-card-subtitle
+                >Du 1/mai/2022 au 30/mai/2022
+              </mat-card-subtitle>
+            </mat-card>
+          </mat-card>
+        </mat-grid-tile>
+
+        <!--Détails-->
+        <mat-grid-tile>
+          <mat-card class="dashboard-card">
+            <mat-card-title>
+              <mat-icon matSuffix>info</mat-icon> Détails
+            </mat-card-title>
+            <mat-divider></mat-divider>
+            <!---->
+            <mat-card-content>
+              <p>
+                <mat-form-field appearance="fill">
+                  <mat-label>Nom</mat-label>
+                  <input
+                    formControlName="first_name"
+                    matInput
+                    placeholder="Ex. Tareb"
+                    required
+                  />
+                  <mat-icon matSuffix>first_name</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Prénom</mat-label>
+                  <input
+                    formControlName="last_name"
+                    matInput
+                    placeholder="Ex. Mohamed"
+                    required
+                  />
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="fill">
+                  <mat-label>Email</mat-label>
+                  <input
+                    formControlName="email"
+                    matInput
+                    autocomplete="off"
+                    placeholder="Ex. pat@example.com"
+                    required
+                  />
+                  <mat-icon matSuffix>email</mat-icon>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="fill">
+                  <mat-label>password</mat-label>
+                  <input
+                    formControlName="password"
+                    matInput
+                    autocomplete="off"
+                    type="password"
+                    required
+                  />
+                  <mat-icon matSuffix>password</mat-icon>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-radio-group
+                  appearance="fill"
+                  formControlName="gender"
+                  aria-label="Select an option"
+                  required
+                >
+                  <mat-radio-button value="male">Homme </mat-radio-button>
+                  <mat-radio-button value="female">Femme</mat-radio-button>
+                </mat-radio-group>
+              </p>
+            </mat-card-content>
+
+            <!---->
+          </mat-card>
+        </mat-grid-tile>
+
+        <!--Contact -->
+        <mat-grid-tile>
+          <mat-card class="dashboard-card">
+            <mat-card-title>
+              <mat-icon matSuffix>account_box</mat-icon>Contact</mat-card-title
+            >
+            <mat-divider></mat-divider>
+            <!---->
+            <mat-content>
+              <p>
+                <mat-form-field appearance="fill" class="example-form-field">
+                  <mat-label>Date de naissance</mat-label>
+                  <input
+                    matInput
+                    formControlName="birth"
+                    [matDatepicker]="datepicker"
+                    placeholder="1/1/1999"
+                  />
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="datepicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #datepicker>
+                    <mat-datepicker-actions>
+                      <button mat-button matDatepickerCancel>Cancel</button>
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        matDatepickerApply
+                      >
+                        Apply
+                      </button>
+                    </mat-datepicker-actions>
+                  </mat-datepicker>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="legacy">
+                  <mat-label>Phone</mat-label>
+                  <input
+                    formControlName="phone"
+                    type="tel"
+                    matInput
+                    placeholder="entrez le numéro de tel"
+                  />
+                  <mat-icon matSuffix>local_phone</mat-icon>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="legacy">
+                  <mat-label>address</mat-label>
+                  <input
+                    formControlName="address"
+                    matInput
+                    placeholder="Ex. Rue d'alger kolea"
+                  />
+                  <mat-icon matSuffix>home</mat-icon>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="legacy">
+                  <mat-label>Note</mat-label>
+                  <textarea
+                    formControlName="note"
+                    matInput
+                    placeholder="Ex. note"
+                  ></textarea>
+                </mat-form-field>
+              </p>
+            </mat-content>
+            <!---->
+          </mat-card>
+        </mat-grid-tile>
+
+        <!--Détails plus -->
+        <mat-grid-tile>
+          <mat-card class="dashboard-card">
+            <mat-card-title>
+              <mat-icon matSuffix>reorder</mat-icon>Détails plus</mat-card-title
+            ><mat-divider></mat-divider>
+            <!---->
+            <mat-content>
+              <p>
+                <mat-form-field appearance="fill">
+                  <mat-label>Poids</mat-label>
+                  <input formControlName="weight" matInput autocomplete="off" />
+                  <mat-icon>create</mat-icon>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="fill">
+                  <mat-label>height</mat-label>
+                  <input formControlName="height" matInput autocomplete="off" />
+                  <mat-icon>create</mat-icon>
+                </mat-form-field>
+              </p>
+            </mat-content>
+            <!---->
+          </mat-card></mat-grid-tile
+        >
+        <!--medicals info -->
+        <mat-grid-tile>
+          <mat-card class="dashboard-card">
+            <mat-card-title>
+              <mat-icon matSuffix>local_hospital</mat-icon> Informations
+              Médicals
+            </mat-card-title>
+            <mat-divider></mat-divider>
+            <!---->
+            <mat-content> </mat-content>
+            <!---->
+          </mat-card>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </form>
+  </mat-tab>
+  <mat-tab label="Adhésion"> Content 2 </mat-tab>
+  <mat-tab label="Comptes"> Content 3 </mat-tab>
+  <mat-tab label="Facturations"> Content 4 </mat-tab>
+</mat-tab-group>

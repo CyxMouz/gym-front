@@ -1,0 +1,59 @@
+<form class="example-form">
+  <mat-card class="dashboard-card">
+    <mat-card-title>Assigner un programme au abonnées</mat-card-title>
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Selectioner un abonner</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="userControl"
+        [matAutocomplete]="auto"
+        (click)="displayUsers()"
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option
+          *ngFor="let option of filteredOptions | async"
+          [value]="option"
+          (click)="getUserId(option.id)"
+        >
+          {{ option.first_name }} {{ option.last_name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <label id="example-radio-group-label"
+      >Choisir un programme d'entrainement</label
+    >
+
+    <mat-radio-group
+      aria-labelledby="example-radio-group-label"
+      class="example-radio-group"
+      [(ngModel)]="programName"
+      [ngModelOptions]="{ standalone: true }"
+    >
+      <mat-radio-button
+        class="example-radio-button"
+        *ngFor="let item of programList"
+        [value]="item.name"
+        (click)="getProgramId(item.id)"
+      >
+        {{ item.name }}
+      </mat-radio-button>
+    </mat-radio-group>
+    <div>
+      le programme selectioné pour
+      <span style="color: blue">
+        <b>{{ username }}</b>
+      </span>
+
+      est :
+      <span style="color: red">
+        <b>{{ programName }}</b></span
+      >
+    </div>
+    <mat-card-actions align="end"
+      ><button mat-stroked-button color="primary" (click)="onSubmit()">
+        Enregistrer
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

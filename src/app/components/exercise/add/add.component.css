@@ -1,0 +1,36 @@
+.container {
+  max-width: auto;
+  display:grid;
+  
+  grid-template-columns: repeat(3,auto);
+ 
+  grid-gap: 20px;
+  
+}
+
+  
+  .example-header-image {
+    
+    background-size: cover;
+  }
+
+  .imageItem {
+    width: 300px;
+    
+    padding: 5px;
+    border: 2px solid ;
+    border-style: groove;
+    border-radius: 12px;
+  
+  }
+ 
+.example-card {
+  max-width: 400px;
+  margin-bottom: 8px;
+  justify-items: center;
+  justify-content: center;
+}
+  
+.imageContainer {
+  margin: 20px;
+}

@@ -1,0 +1,81 @@
+<div class="container">
+  <div *ngFor="let item of exerciseList; let i = index">
+    <div>
+      <mat-card class="example-card">
+        <mat-card-header>
+          <mat-card-title>{{ item.name }}</mat-card-title>
+          <mat-card-subtitle>{{ item.description }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <div class="imageContainer">
+          <div *ngIf="url[i]">
+            <img class="imageItem" [src]="url[i]" />
+          </div>
+        </div>
+
+        <form [formGroup]="fileUploadForm">
+          <div class="custom-file">
+            <input
+              type="file"
+              class="custom-file-input"
+              id="uploadedImage"
+              name="uploadedImage"
+              (change)="onFileSelect($event, item.id, i)"
+              #UploadFileInput
+              enctype="multipart/form-data"
+            />
+            <label class="custom-file-label" for="uploadedImage"
+              >choisir une photo</label
+            >
+          </div>
+
+          <button
+            type="button"
+            mat-button
+            color="primary"
+            (click)="onFormSubmit(item.id)"
+          >
+            Save
+          </button>
+        </form>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="fill">
+                repitions :
+                <input
+                  type="text"
+                  matInput
+                  (change)="insertRepition($event, item.id)"
+                  value="{{ item.default_repitions }}"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="fill">
+                series :
+                <input
+                  type="text"
+                  matInput
+                  (change)="insertSeries($event, item.id)"
+                  value="{{ item.default_series }}"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+        <!-- <mat-card-actions>
+          <div class="row">
+            <div class="col">
+              <button mat-button color="primary">Modifier</button>
+            </div>
+
+            <div class="col">
+              <button mat-button disabled>Supprimer</button>
+            </div>
+          </div>
+        </mat-card-actions> -->
+      </mat-card>
+    </div>
+  </div>
+</div>
