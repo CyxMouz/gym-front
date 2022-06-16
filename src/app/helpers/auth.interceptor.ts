@@ -1,6 +1,14 @@
-import { HTTP_INTERCEPTORS, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpEvent,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+import {
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+} from '@angular/common/http';
 
 import { TokenStorageService } from '../services/token-storage.service';
 
@@ -11,16 +19,23 @@ const TOKEN_HEADER_KEY = 'x-access-token';
 //const TOKEN_HEADER_KEY = 'Authorization';       // for Spring Boot back-end
 
 @Injectable({
-  providedIn : "root"
+  providedIn: 'root',
 })
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
 
-  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  constructor(private tokenService: TokenStorageService, private authService: AuthService) { }
+  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
+    null
+  );
+  constructor(
+    private tokenService: TokenStorageService,
+    private authService: AuthService
+  ) {}
 
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<Object>> {
     // let authReq = req;
     // const token = this.tokenService.getToken();
     // //console.log("letoken du interceptor", token);
@@ -34,13 +49,19 @@ export class AuthInterceptor implements HttpInterceptor {
       authReq = this.addTokenHeader(req, token);
     }
 
-      return  next.handle(authReq).pipe(catchError(error => {
-      if (error instanceof HttpErrorResponse && !authReq.url.includes('auth/signin') && error.status === 401) {
-        return this.handle401Error(authReq, next);
-      }
+    return next.handle(authReq).pipe(
+      catchError((error) => {
+        if (
+          error instanceof HttpErrorResponse &&
+          !authReq.url.includes('auth/signin') &&
+          error.status === 401
+        ) {
+          return this.handle401Error(authReq, next);
+        }
 
-      return throwError(error);
-    }));
+        return throwError(error);
+      })
+    );
   }
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
@@ -57,12 +78,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
             this.tokenService.saveToken(token.accessToken);
             this.refreshTokenSubject.next(token.accessToken);
-            
+
             return next.handle(this.addTokenHeader(request, token.accessToken));
           }),
           catchError((err) => {
             this.isRefreshing = false;
-            
+
             this.tokenService.signOut();
             return throwError(err);
           })
@@ -70,7 +91,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return this.refreshTokenSubject.pipe(
-      filter(token => token !== null),
+      filter((token) => token !== null),
       take(1),
       switchMap((token) => next.handle(this.addTokenHeader(request, token)))
     );
@@ -81,11 +102,12 @@ export class AuthInterceptor implements HttpInterceptor {
     // return request.clone({ headers: request.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
 
     /* for Node.js Express back-end */
-    return request.clone({ headers: request.headers.set(TOKEN_HEADER_KEY, token) });
+    return request.clone({
+      headers: request.headers.set(TOKEN_HEADER_KEY, token),
+    });
   }
 }
 
-
 export const authInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 ];

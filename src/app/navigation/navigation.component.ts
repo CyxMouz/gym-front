@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css'],
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
   menuItems = [
     'Dashboard',
     'Ajouter Client',
@@ -35,6 +36,7 @@ export class NavigationComponent {
   ];
   menu = [this.menuItems, this.menuLinks];
   pageName = 'Bienvenu sur Gym City';
+  connected = [];
   setPageName(pagename) {
     this.pageName = pagename;
   }
@@ -45,5 +47,16 @@ export class NavigationComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private socketService: SocketService
+  ) {}
+  ngOnInit(): void {
+    this.socketService.getConnected().then((data) => {
+      data.subscribe((data) => {
+        this.connected = [];
+        this.connected.push(data);
+      });
+    });
+  }
 }

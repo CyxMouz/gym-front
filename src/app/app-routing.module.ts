@@ -14,6 +14,7 @@ import { UpdateProgramComponent } from './components/assign/update-program/updat
 import { NavMenuComponent } from './components/assign/nav-menu/nav-menu.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
+import { NavigationComponent } from './navigation/navigation.component';
 
 const routes: Routes = [
   // users routes
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'navProgram', component: NavMenuComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
 
 @NgModule({
