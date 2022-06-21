@@ -46,7 +46,8 @@ import { NavMenuComponent } from './components/assign/nav-menu/nav-menu.componen
 import { UpdateProgramComponent } from './components/assign/update-program/update-program.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
-import { SocketService } from './services/socket.service';
+
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -83,6 +84,7 @@ import { SocketService } from './services/socket.service';
     MatExpansionModule,
     DragDropModule,
     MatTableModule,
+    MatSelectModule,
   ],
   declarations: [
     AppComponent,

@@ -39,6 +39,18 @@ export class AddComponent implements OnInit {
   programId;
   dropEvent;
 
+  toppings = new FormControl('');
+
+  days: string[] = [
+    'samedi',
+    'dimanche',
+    'lundi',
+    'mardi',
+    'mercredi',
+    'jeudi',
+    'vendredi',
+  ];
+
   ngOnInit(): void {
     this.exerciseService.getAll().subscribe((data) => {
       this.setListExercise(data);
@@ -111,6 +123,9 @@ export class AddComponent implements OnInit {
     //console.log('muscle table', this.muscle);
   }
 
+  setDay(event: any, data, day) {
+    data.day = day;
+  }
   seriesChanged(event: any, data) {
     console.log('event value', event.target.value);
     data.default_series = event.target.value;

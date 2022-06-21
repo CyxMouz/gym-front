@@ -1,220 +1,366 @@
-<mat-form-field class="searchBar" appearance="fill">
-  <mat-label>Chercher un membre </mat-label>
-  <input
-    matInput
-    type="text"
-    [formControl]="search"
-    [matAutocomplete]="auto"
-    aria-label="Clear"
-    [(ngModel)]="insertSearchBarValue"
-  />
-  <button
-    *ngIf="insertSearchBarValue"
-    matSuffix
-    mat-icon-button
-    aria-label="Clear"
-    (click)="insertSearchBarValue = ''"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
-  <mat-icon matSuffix>search</mat-icon>
 
-  <mat-autocomplete
-    autoActiveFirstOption
-    #auto="matAutocomplete"
-    [displayWith]="displayFn"
-  >
-    <mat-option
-      *ngFor="let option of filteredOptions | async"
-      [value]="option"
-      (click)="getProgram(option)"
-    >
-      {{ option.name }}
-    </mat-option>
-  </mat-autocomplete>
-</mat-form-field>
-<!---->
-<form
-  *ngIf="insertSearchBarValue"
-  [formGroup]="programControl"
-  (ngSubmit)="submit()"
->
-  <div class="example-action-buttons">
-    <button mat-button (click)="accordion.openAll()">Tout Ouvrir</button>
-    <button mat-button (click)="accordion.closeAll()">Tout Fermer</button>
-  </div>
-  <mat-accordion class="example-headers-align" multi>
-    <mat-card-header
-      style="justify-content: end; margin-top: 2px; margin-bottom: 2px"
-    >
-      <section>
-        <button
-          type="button"
-          mat-raised-button
-          color="accent"
-          (click)="setValue()"
-        >
-          set default
-        </button>
-        <button
-          type="button"
-          mat-raised-button
-          color="primary"
-          (click)="reset()"
-        >
-          reset
-        </button>
-        <button
-          type="button"
-          mat-raised-button
-          color="primary"
-          (click)="delete()"
-        >
-          Delete
-        </button>
-      </section>
-    </mat-card-header>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title> Programme Section</mat-panel-title>
-        <mat-panel-description>
-          Programme Informations
-          <mat-icon>account_circle</mat-icon>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-card>
-        <mat-form-field appearance="fill">
-          <mat-label>Nom du Programme</mat-label>
-          <input
-            formControlName="name"
-            matInput
-            placeholder="Ex. Débutant"
-            required
-          />
-          <mat-icon matSuffix>edit</mat-icon>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>Description</mat-label>
-          <input
-            formControlName="description"
-            matInput
-            placeholder="Ex. programme ta3 said beh yetla3"
-          />
-          <mat-icon matSuffix>description</mat-icon>
-        </mat-form-field>
-        <mat-card-actions align="end">
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="saveProgramInfo()"
-          >
-            sauvegarder
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </mat-expansion-panel>
+    <mat-form-field class="searchBar" appearance="fill">
+      <mat-label>Chercher un membre </mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="search"
+        [matAutocomplete]="auto"
+        aria-label="Clear"
+        [(ngModel)]="insertSearchBarValue"
+      />
+      <button
+        *ngIf="insertSearchBarValue"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="insertSearchBarValue = ''"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-icon matSuffix>search</mat-icon>
 
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title> Exercise Section </mat-panel-title>
-        <mat-panel-description>
-          Liste des Exercises
-          <mat-icon>account_circle</mat-icon>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-card>
-        <!-- drag and drop start -->
-        <div cdkDropListGroup>
-          <div class="example-container">
-            <h2>Ajouter au Programme</h2>
-            <div class="example-scroll">
-              <div *ngFor="let muscle of muscle">
-                {{ muscle.name }}
+      <mat-autocomplete
+        autoActiveFirstOption
+        #auto="matAutocomplete"
+        [displayWith]="displayFn"
+      >
+        <mat-option
+          *ngFor="let option of filteredOptions | async"
+          [value]="option"
+          (click)="getProgram(option)"
+        >
+          {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <!---->
+    <form
+      *ngIf="insertSearchBarValue"
+      [formGroup]="programControl"
+      (ngSubmit)="submit()"
+    >
+      <div class="example-action-buttons">
+        <button mat-button (click)="accordion.openAll()">Tout Ouvrir</button>
+        <button mat-button (click)="accordion.closeAll()">Tout Fermer</button>
+      </div>
+      <mat-accordion class="example-headers-align" multi>
+        <mat-card-header
+          style="justify-content: end; margin-top: 2px; margin-bottom: 2px"
+        >
+          <section>
+            <button
+              type="button"
+              mat-raised-button
+              color="accent"
+              (click)="setValue()"
+            >
+              set default
+            </button>
+            <button
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="reset()"
+            >
+              reset
+            </button>
+            <button
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="delete()"
+            >
+              Delete
+            </button>
+          </section>
+        </mat-card-header>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Programme Section</mat-panel-title>
+            <mat-panel-description>
+              Programme Informations
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-card>
+            <mat-form-field appearance="fill">
+              <mat-label>Nom du Programme</mat-label>
+              <input
+                formControlName="name"
+                matInput
+                placeholder="Ex. Débutant"
+                required
+              />
+              <mat-icon matSuffix>edit</mat-icon>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Description</mat-label>
+              <input
+                formControlName="description"
+                matInput
+                placeholder="Ex. programme ta3 said beh yetla3"
+              />
+              <mat-icon matSuffix>description</mat-icon>
+            </mat-form-field>
+            <mat-card-actions align="end">
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="saveProgramInfo()"
+              >
+                sauvegarder
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Exercise Section </mat-panel-title>
+            <mat-panel-description>
+              Liste des Exercises
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-card>
+            <!-- drag and drop start -->
+            <div cdkDropListGroup>
+              <div class="example-container">
+                <h2>Ajouter au Programme</h2>
+                <div class="example-scroll">
+                  <div *ngFor="let muscle of muscle">
+                    {{ muscle.name }}
+
+                    <div
+                      cdkDropList
+                      [cdkDropListData]="muscle_exercise"
+                      class="example-list"
+                      (cdkDropListDropped)="drop($event)"
+                    >
+                      <div *ngFor="let item of muscle_exercise">
+                        <div
+                          class="example-box"
+                          cdkDrag
+                          *ngIf="item.muscles[0].name === muscle.name"
+                        >
+                          {{ item.name }}
+                          <mat-form-field
+                            [style.width.px]="90"
+                            class="example-form-field"
+                            appearance="fill"
+                          >
+                            <mat-label>series</mat-label>
+                            <input
+                              matInput
+                              placeholder="Ex. 3"
+                              value="{{ item.exercise_program.series }}"
+                              (change)="seriesChangedUpdate($event, item)"
+                            />
+                          </mat-form-field>
+                          <mat-form-field
+                            [style.width.px]="90"
+                            class="example-form-field"
+                            appearance="fill"
+                          >
+                            <mat-label>repitions</mat-label>
+                            <input
+                              matInput
+                              placeholder="Ex. 3"
+                              value="{{ item.exercise_program.repitions }}"
+                              (change)="repitionsChangedUpdate($event, item)"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br />
+              </div>
+
+              <div class="example-container">
+                <h2>Liste des Exercises Disponibles</h2>
 
                 <div
                   cdkDropList
-                  [cdkDropListData]="muscle_exercise"
+                  [cdkDropListData]="exercise"
                   class="example-list"
                   (cdkDropListDropped)="drop($event)"
-                  (change)="valueChanged($event)"
                 >
-                  <div *ngFor="let item of muscle_exercise">
+                  <div class="example-scroll">
                     <div
                       class="example-box"
+                      *ngFor="let item of exercise"
                       cdkDrag
-                      *ngIf="item.muscles[0].name === muscle.name"
                     >
                       {{ item.name }}
+                      <mat-form-field
+                        [style.width.px]="90"
+                        class="example-form-field"
+                        appearance="fill"
+                      >
+                        <mat-label>series</mat-label>
+                        <input
+                          matInput
+                          placeholder="Ex. 3"
+                          value="{{ item.default_series }}"
+                          (change)="seriesChanged($event, item)"
+                        />
+                      </mat-form-field>
+                      <mat-form-field
+                        [style.width.px]="90"
+                        class="example-form-field"
+                        appearance="fill"
+                      >
+                        <mat-label>repitions</mat-label>
+                        <input
+                          matInput
+                          placeholder="Ex. 3"
+                          value="{{ item.default_repitions }}"
+                          (change)="repitionsChanged($event, item)"
+                        />
+                      </mat-form-field>
+                      <p>{{ item.muscles[0].name }}</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <br />
-          </div>
-
-          <div class="example-container">
-            <h2>Liste des Exercises Disponibles</h2>
-
-            <div
-              cdkDropList
-              [cdkDropListData]="exercise"
-              class="example-list"
-              (cdkDropListDropped)="drop($event)"
+            <mat-card-actions align="end">
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="saveExerciseInfo()"
+              >
+                sauvegarder
+              </button>
+            </mat-card-actions>
+            <mat-card-actions
+              align="end"
+              *ngIf="updatedContentSucess || updatedContentFaill"
             >
-              <div class="example-scroll">
-                <div class="example-box" *ngFor="let item of exercise" cdkDrag>
-                  {{ item.name }}
-                  <mat-form-field
-                    [style.width.px]="90"
-                    class="example-form-field"
-                    appearance="fill"
-                  >
-                    <mat-label>series</mat-label>
-                    <input
-                      matInput
-                      placeholder="Ex. 3"
-                      value="{{ item.default_series }}"
-                      (change)="seriesChanged($event, item)"
-                    />
-                  </mat-form-field>
-                  <mat-form-field
-                    [style.width.px]="90"
-                    class="example-form-field"
-                    appearance="fill"
-                  >
-                    <mat-label>repitions</mat-label>
-                    <input
-                      matInput
-                      placeholder="Ex. 3"
-                      value="{{ item.default_repitions }}"
-                      (change)="repitionsChanged($event, item)"
-                    />
-                  </mat-form-field>
-                  <p>{{ item.muscles[0].name }}</p>
+              <div
+                *ngIf="updatedContentSucess"
+                class="alert alert-success"
+                alert-dismissible
+                fade
+                show
+                role="alert"
+              >
+                Program mis à jour
+                <button
+                  mat-button
+                  data-bs-dismiss="alert"
+                  (click)="CloseAlertSucess()"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              <div
+                *ngIf="updatedContentFaill"
+                class="alert alert-danger"
+                alert-dismissible
+                fade
+                show
+                role="alert"
+              >
+                sauvegarder le nom du program d'abord
+                <button
+                  mat-button
+                  data-bs-dismiss="alert"
+                  (click)="CloseAlertFaill()"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </mat-card-actions>
+            <!-- drag and drop end -->
+          </mat-card>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Calendrier </mat-panel-title>
+            <mat-panel-description>
+              Liste des Exercises -> jour de semaine
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-card>
+            <mat-card-title> organisation </mat-card-title>
+            <mat-card-content>
+              <div class="row">
+                <div *ngFor="let item of muscle_exercise">
+                  <div class="column">{{ item.name }}</div>
+                  <div class="column">
+                    <mat-form-field appearance="fill">
+                      <mat-label>jour</mat-label>
+
+                      <mat-select [(value)]="item.exercise_program.day">
+                        <mat-option
+                          *ngFor="let day of days"
+                          [value]="day"
+                          (click)="setDay($event, item, day)"
+                        >
+                          {{ day }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="saveExerciseInfo()"
+              >
+                sauvegarder
+              </button>
+            </mat-card-actions>
+            <mat-card-actions
+              align="end"
+              *ngIf="updatedContentSucess || updatedContentFaill"
+            >
+              <div
+                *ngIf="updatedContentSucess"
+                class="alert alert-success"
+                alert-dismissible
+                fade
+                show
+                role="alert"
+              >
+                Program mis à jour
+                <button
+                  mat-button
+                  data-bs-dismiss="alert"
+                  (click)="CloseAlertSucess()"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              <div
+                *ngIf="updatedContentFaill"
+                class="alert alert-danger"
+                alert-dismissible
+                fade
+                show
+                role="alert"
+              >
+                sauvegarder le nom du program d'abord
+                <button
+                  mat-button
+                  data-bs-dismiss="alert"
+                  (click)="CloseAlertFaill()"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </mat-card-actions>
+          </mat-card>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </form>
+  </mat-tab>
 
-        <div *ngIf="updatedContent" class="alert alert-success" role="alert">
-          Program mis à jour
-        </div>
-        <div *ngIf="updatedProgram" class="alert alert-danger" role="alert">
-          Updated the program name first
-        </div>
-        <mat-card-actions align="end">
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="saveExerciseInfo()"
-          >
-            sauvegarder
-          </button>
-        </mat-card-actions>
-        <!-- drag and drop end -->
-      </mat-card>
-    </mat-expansion-panel>
-  </mat-accordion>
-</form>

@@ -135,6 +135,37 @@
           </div>
         </div>
 
+        <!-- drag and drop end -->
+      </mat-card>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Calendrier </mat-panel-title>
+        <mat-panel-description>
+          Liste des Exercises -> jour de semaine
+          <mat-icon>account_circle</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <mat-card-title> organisation </mat-card-title>
+        <mat-card-content>
+          <div *ngFor="let item of muscle_exercise">
+            {{ item.name }}
+            <mat-form-field appearance="fill">
+              <mat-label>jour</mat-label>
+              <mat-select>
+                <mat-option
+                  *ngFor="let day of days"
+                  [value]="day"
+                  (click)="setDay($event, item, day)"
+                >
+                  {{ day }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
         <mat-card-actions align="end">
           <button
             type="button"
@@ -144,7 +175,6 @@
             sauvegarder
           </button>
         </mat-card-actions>
-        <!-- drag and drop end -->
       </mat-card>
     </mat-expansion-panel>
   </mat-accordion>

@@ -32,10 +32,20 @@ export class FindComponent implements OnInit {
     private exerciseService: ExerciseService,
     private userService: UserService
   ) {}
-
+  days: string[] = [
+    'samedi',
+    'dimanche',
+    'lundi',
+    'mardi',
+    'mercredi',
+    'jeudi',
+    'vendredi',
+  ];
+  tab = [];
   muscle = [];
   exercise = [];
   muscle_exercise = [];
+  muscle_exercise_previous = [];
   done = [];
   programInfo = false;
   programId;
@@ -47,14 +57,18 @@ export class FindComponent implements OnInit {
   options: string[];
   updatedContent = false;
   updatedProgram = false;
+  program;
+  alldata;
+  updatedContentSucess = false;
+  updatedContentFaill = false;
+
   ngOnInit(): void {
-    // this.exerciseService.getAll().subscribe((data) => {
-    //   this.setListExercise(data);
-    // });
     this.exerciseService.getAllMuscle().subscribe((data) => {
       this.setListMuscle(data);
     });
+
     this.programService.getAll().subscribe((data) => {
+      this.alldata = data;
       this.filteredOptions = this.search.valueChanges.pipe(
         startWith(''),
         map((value) => data)
@@ -62,12 +76,24 @@ export class FindComponent implements OnInit {
     });
   }
   displayFn(program): string {
+    this.muscle_exercise = [];
+    this.tab = [];
+    this.program = program;
     if (program) {
       this.insertSearchBarValue = program.name;
+
       return program && program.name ? program.name : '';
     }
   }
+
   getProgram(program) {
+    this.program = program;
+    this.programId = program.id;
+    this.programService.get(program.id).subscribe((program) => {
+      this.setSearchedProgram(program);
+    });
+  }
+  getProgram2(program) {
     this.programId = program.id;
     this.programService.get(program.id).subscribe((program) => {
       this.setSearchedProgram(program);
@@ -82,30 +108,39 @@ export class FindComponent implements OnInit {
 
     this.programService
       .getProgramExercise(this.programId)
-      .subscribe((response) => {
-        console.log(this.programId);
-        this.getMuscleExercise(response[0].exercises);
+      .subscribe((fullProgram) => {
+        this.getMuscleExercise(fullProgram);
       });
   }
-  getMuscleExercise(response) {
-    let tab = [];
-    if (response) {
-      response.forEach((element) => {
-        console.log(element);
-        tab.push(element.id);
+  getMuscleExercise(fullProgram) {
+    let programUser = [];
+
+    if (fullProgram) {
+      fullProgram.forEach((element) => {
+        /* program utilisateur */
+
+        element.exercises.forEach((e) => {
+          this.muscle_exercise.push(e);
+
+          this.tab.push(e.id);
+        });
       });
 
-      this.exerciseService.getAllFromProgram(tab).subscribe((data) => {
-        this.muscle_exercise = data;
-      });
-      this.exerciseService.getAllNotInSelectedProgam(tab).subscribe((data) => {
-        console.log(data);
-        this.setListExercise(data);
-      });
+      this.exerciseService
+        .getAllNotInSelectedProgam(this.tab)
+        .subscribe((data) => {
+          this.setListExercise(data);
+        });
     } else {
       this.exerciseService.getAll().subscribe((data) => {
         this.setListExercise(data);
       });
+    }
+  }
+  setDay(event: any, data, day) {
+    data.day = day;
+    if (data.exercise_program != undefined) {
+      data.exercise_program.day = day;
     }
   }
 
@@ -141,6 +176,7 @@ export class FindComponent implements OnInit {
     if (!this.programInfo) {
       this.programInfo = true;
       this.programControl.setValue(this.programControl.value);
+      console.log(this.programControl.value);
       this.programService
         .update(this.programId, this.programControl.value)
         .subscribe((response) => {
@@ -161,16 +197,54 @@ export class FindComponent implements OnInit {
     if (!this.programInfo) {
       //alert('sauvegarder le nom du programme svp !');
       this.updatedProgram = true;
+      this.updatedContentFaill = true;
     } else {
       this.updatedProgram = false;
       this.sendProgram();
+      this.updatedContentSucess = true;
       this.updatedContent = true;
     }
   };
   sendProgram() {
+    let tab = [];
+    let def_series;
+    let def_repitions;
+    let def_day;
+    this.muscle_exercise.forEach((element) => {
+      console.log(element.exercise_program.series);
+      if (element.exercise_program != undefined) {
+        def_series = element.exercise_program.series;
+      } else {
+        def_series = element.default_series;
+      }
+      if (element.exercise_program != undefined) {
+        def_repitions = element.exercise_program.repitions;
+      } else {
+        def_repitions = element.default_repitions;
+      }
+      if (element.exercise_program != undefined) {
+        def_day = element.exercise_program.day;
+      } else {
+        def_day = element.day || '';
+      }
+
+      tab.push({
+        id: element.id,
+
+        series: def_series,
+
+        repitions: def_repitions,
+
+        day: def_day,
+      });
+    });
+    console.log('####', tab);
     this.programService
-      .updateProgramExercise(this.programId, this.muscle_exercise)
+      .updateProgramExercise(this.programId, tab)
       .subscribe((response) => {
+        this.muscle_exercise = [];
+        this.tab = [];
+        this.getProgram2(this.program);
         console.log('exerciseList ', response);
       });
   }
@@ -181,9 +255,18 @@ export class FindComponent implements OnInit {
 
   setListExercise(exercise) {
     exercise.forEach((element) => {
+      let exercise_program;
+      if (element.exercise_program == undefined) {
+        exercise_program = {
+          series: '',
+          repitions: '',
+          day: '',
+        };
+      }
+      element.exercise_program = exercise_program;
       this.exercise.push(element);
     });
-    // console.log('exercise table', this.exercise);
+    console.log('exercise table', this.exercise);
   }
   setListMuscle(muscle) {
     muscle.forEach((element) => {
@@ -195,18 +278,48 @@ export class FindComponent implements OnInit {
   seriesChanged(event: any, data) {
     console.log('event value', event.target.value);
     data.default_series = event.target.value;
+    console.log('series changed', data);
+    if (data.exercise_program != undefined) {
+      data.exercise_program.series = event.target.value;
+    }
     console.log(data);
   }
   repitionsChanged(event: any, data) {
     console.log('event value', event.target.value);
     data.default_repitions = event.target.value;
+    if (data.exercise_program != undefined) {
+      data.exercise_program.repitions = event.target.value;
+    }
     console.log(data);
   }
 
+  seriesChangedUpdate(event: any, data) {
+    console.log('series', data);
+    if (data.exercise_program != undefined) {
+      data.exercise_program.series = event.target.value;
+    }
+  }
+  repitionsChangedUpdate(event: any, data) {
+    console.log('rep', data);
+    if (data.exercise_program != undefined) {
+      data.exercise_program.repitions = event.target.value;
+    }
+  }
+  CloseAlertSucess() {
+    if (this.updatedContent === true) {
+      this.updatedContentSucess = false;
+    }
+  }
+  CloseAlertFaill() {
+    if (this.updatedContent === false) {
+      this.updatedContentFaill = false;
+    }
+  }
   drop(event: CdkDragDrop<string[]>) {
     this.dropEvent = event;
 
     console.log('drop log', this.muscle_exercise);
+    //exercise_program: {series: '', repitions: '', day : ''
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -214,6 +327,7 @@ export class FindComponent implements OnInit {
         event.currentIndex
       );
     } else {
+      console.log('dd', event.container.data);
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
