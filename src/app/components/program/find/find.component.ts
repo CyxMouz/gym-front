@@ -7,7 +7,7 @@ import {
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
-import { interval, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith, timeInterval } from 'rxjs/operators';
 
 import { ExerciseService } from 'src/app/services/exercise.service';
